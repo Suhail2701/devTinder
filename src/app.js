@@ -103,7 +103,7 @@ app.use("/", userRouter);
 connectDb()
     .then(() => {
         console.log("DB connected successfully");
-        app.listen(3000, () => {
+        app.listen(3000, "0.0.0.0", () => {
             console.log("Server is listening on Port number 3000....");
         });
     })
