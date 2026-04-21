@@ -10,13 +10,13 @@ const userAuth = async (req, res, next) => {
             return res.status(401).send("Please login to access this resource");
         }
 
-        const decodedObj = await jwt.verify(token, "Suhail@123");
+        const decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
 
         const { _id } = decodedObj;
 
         const user = await User.findById(_id);
         if(!user)
-        {
+        {  
             throw new Error("User not found");
         }
         req.user = user;
