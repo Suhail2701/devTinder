@@ -14,6 +14,9 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const cors = require("cors");
+const http = require("http");
+const initializeSocketServer = require("./socket/socket");
+const chatRouter = require('./routes/chat');
 
 const app = express();
 
@@ -27,22 +30,26 @@ app.use(cors({
 }));
 
 // app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-//   res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
-
-//   if (req.method === "OPTIONS") {
-//     return res.sendStatus(200);
-//   }
-
-//   next();
-// });
-
-app.use("/", authRouter);
-app.use("/", profileRouter);
-app.use("/", requestRouter);
-app.use("/", userRouter);
+    //   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    //   res.header("Access-Control-Allow-Credentials", "true");
+    //   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    //   res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+    
+    //   if (req.method === "OPTIONS") {
+        //     return res.sendStatus(200);
+        //   }
+        
+        //   next();
+        // });
+        
+        app.use("/", authRouter);
+        app.use("/", profileRouter);
+        app.use("/", requestRouter);
+        app.use("/", userRouter);
+        app.use("/", chatRouter);
+        
+const server = http.createServer(app);
+initializeSocketServer(server);
 
 // app.get('/feed', async (req, res) => {
 //     const userEmail = req.body.emailId;
@@ -104,7 +111,7 @@ app.use("/", userRouter);
 connectDb()
     .then(() => {
         console.log("DB connected successfully");
-        app.listen(process.env.PORT, "0.0.0.0", () => {
+        server.listen(process.env.PORT, "0.0.0.0", () => {
             console.log("Server is listening on Port number 3000....");
         });
     })
